@@ -28,7 +28,8 @@ public class BookController {
     }
 
     @GetMapping("/create")
-    public String createBookPage() {
+    public String createBookPage(Model model) {
+        model.addAttribute("bookCreateDTO", new BookCreateDTO());
         return "book_create";
     }
 
@@ -47,12 +48,13 @@ public class BookController {
         return "book_edit";
     }
 
-    @PostMapping("/{id}/edit")
-    public String editBook(@PathVariable Long id, @ModelAttribute BookCreateDTO dto) {
+    @PostMapping("/edit")
+    public String editBook(@ModelAttribute Book book) {
         String sql = "update book set title = ?, description = ?, price = ?, author = ? where id = ?;";
-        jdbcTemplate.update(sql, dto.getTitle(), dto.getDescription(), dto.getPrice(), dto.getAuthor(), id);
+        jdbcTemplate.update(sql, book.getTitle(), book.getDescription(), book.getPrice(), book.getAuthor(), book.getId());
         return "redirect:/books";
     }
+
 
     @PostMapping("/{id}/delete")
     public String deleteBook(@PathVariable Long id) {
@@ -61,12 +63,17 @@ public class BookController {
         return "redirect:/books";
     }
 
+    @GetMapping("/search")
+    public String searchPage() {
+        return "search";
+    }
+
     @PostMapping("/search")
     public String searchBooks(@RequestParam String query, Model model) {
         String sql = "select * from book where title like ? or description like ? or author like ?;";
         List<Book> books = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Book.class), "%" + query + "%", "%" + query + "%", "%" + query + "%");
         model.addAttribute("books", books);
         model.addAttribute("query", query);
-        return "search_results";
+        return "search_books";
     }
 }
