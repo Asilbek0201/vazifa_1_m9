@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Books</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Search Books</h1>
+    <form th:action="@{/books/search}" method="post">
+        <div class="form-group">
+            <label for="query">Search:</label>
+            <input type="text" class="form-control" id="query" name="query" placeholder="Enter search query">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+</body>
+</html>
